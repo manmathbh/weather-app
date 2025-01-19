@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App by Manmath</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #87CEEB, #ffffff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .weather-app {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 300px;
+        }
+
+        .weather-app h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .weather-app input {
+            width: 80%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .weather-app button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .weather-app button:hover {
+            background-color: #0056b3;
+        }
+
+        .weather-info {
+            margin-top: 20px;
+        }
+
+        .weather-info p {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="weather-app">
+        <h1>Weather App</h1>
+        <h5>(It's approx weather(+-2%))</h5>
+        <h5>~manmath.tech</h5>
+        <input type="text" id="location" placeholder="Enter city or location">
+        <button onclick="getWeather()">Get Weather</button>
+
+        <div class="weather-info" id="weatherInfo">
+            <!-- Weather details will appear here -->
+        </div>
+    </div>
+
+    <script>
+        async function getWeather() {
+            const location = document.getElementById('location').value;
+            const apiKey = '80631b6eb95d43e79e4115746251901';
+            const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}&aqi=yes`;
+
+            try {
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error('City not found or API error');
+                }
+
+                const data = await response.json();
+
+                const weatherInfo = document.getElementById('weatherInfo');
+                weatherInfo.innerHTML = `
+                    <p><strong>Location:</strong> ${data.location.name}, ${data.location.country}</p>
+                    <p><strong>Temperature:</strong> ${data.current.temp_c}°C</p>
+                    <p><strong>Condition:</strong> ${data.current.condition.text}</p>
+                    <p><strong>Humidity:</strong> ${data.current.humidity}%</p>
+                    <p><strong>Wind Speed:</strong> ${data.current.wind_kph} kph</p>
+                `;
+            } catch (error) {
+                const weatherInfo = document.getElementById('weatherInfo');
+                weatherInfo.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
